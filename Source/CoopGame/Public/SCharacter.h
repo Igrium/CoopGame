@@ -24,7 +24,12 @@ protected:
 
 	//Movement Functions
 	void MoveForward(float Value);
+
 	void MoveRight(float Value);
+
+	void BeginCrouch();
+
+	void EndCrouch();
 
 	//Components
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
