@@ -3,11 +3,7 @@
 #include "SGrenadeLauncher.h"
 #include "Kismet/GameplayStatics.h"
 
-// sets default values
-ASGrenadeLauncher::ASGrenadeLauncher()
-{
-	SpawnVelocity = 3000.0f;
-}
+
 
 void ASGrenadeLauncher::Fire()
 {
@@ -21,7 +17,7 @@ void ASGrenadeLauncher::Fire()
 
 			//Firing Code
 			FVector MuzzleLocation = MeshComp->GetSocketLocation(MuzzleSocketName);
-			FRotator MuzzleRotation = MeshComp->GetSocketRotation(MuzzleSocketName);
+
 
 			// Set Spawn Collision Handling Override
 			FActorSpawnParameters ActorSpawnParams;
