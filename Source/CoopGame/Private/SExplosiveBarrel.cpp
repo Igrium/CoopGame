@@ -19,9 +19,14 @@ ASExplosiveBarrel::ASExplosiveBarrel()
 
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
 	MeshComp->SetSimulatePhysics(true);
+	MeshComp->SetCollisionObjectType(ECC_PhysicsBody);
+	RootComponent = MeshComp;
 
 	RadialForceComp = CreateDefaultSubobject<URadialForceComponent>(TEXT("RadialForceComponent"));
 	RadialForceComp->SetupAttachment(RootComponent);
+	RadialForceComp->Radius = 500.0f;
+	RadialForceComp->ImpulseStrength = 50000.0f;
+	RadialForceComp->bAutoActivate = false;
 
 	AudioComp = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComponent"));
 	AudioComp->SetupAttachment(RootComponent);

@@ -7,8 +7,10 @@
 #include "SExplosiveBarrel.generated.h"
 
 class USHealthComponent;
+class UStaticMesh;
 class URadialForceComponent;
 class UAudioComponent;
+class UParticleSystem;
 
 UCLASS()
 class COOPGAME_API ASExplosiveBarrel : public AActor

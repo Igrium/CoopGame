@@ -79,6 +79,7 @@ Plugins/*/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+enc_temp_folder/*
 
 
 # End of https://www.gitignore.io/api/unrealengine
