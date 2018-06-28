@@ -7,6 +7,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "PhysicalMaterials/PhysicalMaterial.h"
+#include "TimerManager.h"
 #include "CoopGame.h"
 
 static int32 DebugWeaponDrawing = 0;
@@ -28,6 +29,17 @@ ASWeapon::ASWeapon()
 
 	BaseDamage = 20.0f;
 	HeadshotMultiplier = 4.0f;
+
+	RateOfFire = 600;
+	RandomSpread = 2.0f;
+}
+
+
+void ASWeapon::BeginPlay()
+{
+	Super::BeginPlay();
+
+	TimeBetweenShots = 60 / RateOfFire;
 }
 
 void ASWeapon::Fire()
@@ -43,6 +55,8 @@ void ASWeapon::Fire()
 		
 		FVector ShotDirection = EyeRotation.Vector();
 		FVector TraceEnd = EyeLocation + (ShotDirection * 10000);
+
+		TraceEnd = GetRandomSpread(TraceEnd);
 
 		FCollisionQueryParams QueryParams;
 		QueryParams.AddIgnoredActor(MyOwner);
@@ -100,8 +114,30 @@ void ASWeapon::Fire()
 
 		PlayFireEffect(TracerEndPoint);
 
+		LastFireTime = GetWorld()->TimeSeconds;
 	}
 
+}
+
+void ASWeapon::StartFire()
+{
+	float FirstDelay = FMath::Max((LastFireTime + TimeBetweenShots - GetWorld()->TimeSeconds), 0.0f);
+
+	GetWorldTimerManager().SetTimer(TimerHandle_TimeBetweenShots, this, &ASWeapon::Fire, TimeBetweenShots, true, FirstDelay);
+}
+
+void ASWeapon::StopFire()
+{
+	GetWorldTimerManager().ClearTimer(TimerHandle_TimeBetweenShots);
+}
+
+FVector ASWeapon::GetRandomSpread(FVector InVector)
+{
+	float X = InVector.X + FMath::FRandRange(RandomSpread * -50, RandomSpread * 50);
+	float Y = InVector.Y + FMath::FRandRange(RandomSpread * -50, RandomSpread * 50);
+	float Z = InVector.Z + FMath::FRandRange(RandomSpread * -50, RandomSpread * 50);
+	
+	return FVector(X, Y, Z);
 }
 
 void ASWeapon::PlayFireEffect(FVector TraceEnd)

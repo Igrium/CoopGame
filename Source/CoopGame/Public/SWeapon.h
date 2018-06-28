@@ -29,8 +29,11 @@ protected:
 
 	//Functions
 	
+	virtual void BeginPlay() override;
 
 	void PlayFireEffect(FVector TraceEnd);
+
+	void Fire();
 
 	//Variables
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
@@ -60,12 +63,31 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
 	float BaseDamage;
 
+	/* The actual spread is this times the distance */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
+	float RandomSpread;
+
 	float HeadshotMultiplier;
+	
+	FTimerHandle TimerHandle_TimeBetweenShots;
+
+	float LastFireTime;
+
+	/* RPM - Bullets per minute fired by weapon */
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	float RateOfFire;
+	
+	// derived from rate of fire
+	float TimeBetweenShots;
+
+	FVector GetRandomSpread(FVector InVector);
 
 public:	
 
-	UFUNCTION(BlueprintCallable, Category = "Weapon")
-	virtual void Fire();
-	
+	void StartFire();
+
+	void StopFire();
+
+private:
+
 };
