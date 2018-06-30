@@ -53,6 +53,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Player", meta = (ClapmMin = 0.1, ClampMax = 100.0))
 	float ZoomInterpSpeed;
 
+	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Player")
 	ASWeapon* CurrentWeapon;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Player")

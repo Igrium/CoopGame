@@ -32,6 +32,8 @@ ASWeapon::ASWeapon()
 
 	RateOfFire = 600;
 	RandomSpread = 2.0f;
+
+	SetReplicates(true);
 }
 
 
