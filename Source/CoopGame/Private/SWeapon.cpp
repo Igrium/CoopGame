@@ -51,12 +51,11 @@ void ASWeapon::BeginPlay()
 void ASWeapon::Fire()
 {
 	// Trace the world, from pawn eyes to crossair location
-
 	if (Role < ROLE_Authority)
 	{
 		ServerFire();
 	}
-
+	
 	AActor* MyOwner = GetOwner();
 	if (MyOwner)
 	{
@@ -109,9 +108,9 @@ void ASWeapon::Fire()
 			DrawDebugLine(GetWorld(), EyeLocation, TraceEnd, FColor::White, false, 1.0f, 0, 1.0f);
 		}
 
-		PlayFireEffect(TracerEndPoint);
+		PlayFireEffects(TracerEndPoint);
 
-		if (Role = ROLE_Authority)
+		if (Role == ROLE_Authority)
 		{
 			HitScanTrace.TraceTo = TracerEndPoint;
 			HitScanTrace.SurfaceType = SurfaceType;
@@ -136,13 +135,14 @@ bool ASWeapon::ServerFire_Validate()
 void ASWeapon::OnRep_HitScanTrace()
 {
 	// Play cosmetic FX
-	PlayFireEffect(HitScanTrace.TraceTo);
+	PlayFireEffects(HitScanTrace.TraceTo);
 	PlayImpactEffects(HitScanTrace.SurfaceType, HitScanTrace.TraceTo);
+	
 }
 
 void ASWeapon::StartFire()
 {
-	float FirstDelay = FMath::Max((LastFireTime + TimeBetweenShots - GetWorld()->TimeSeconds), 0.0f);
+	float FirstDelay = FMath::Max(LastFireTime + TimeBetweenShots - GetWorld()->TimeSeconds, 0.0f);
 
 	GetWorldTimerManager().SetTimer(TimerHandle_TimeBetweenShots, this, &ASWeapon::Fire, TimeBetweenShots, true, FirstDelay);
 }
@@ -161,7 +161,7 @@ FVector ASWeapon::GetRandomSpread(FVector InVector)
 	return FVector(X, Y, Z);
 }
 
-void ASWeapon::PlayFireEffect(FVector TraceEnd)
+void ASWeapon::PlayFireEffects(FVector TraceEnd)
 {
 	if (MuzzleEffect)
 	{

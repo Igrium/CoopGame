@@ -46,7 +46,7 @@ protected:
 	
 	virtual void BeginPlay() override;
 
-	void PlayFireEffect(FVector TraceEnd);
+	void PlayFireEffects(FVector TraceEnd);
 
 	void PlayImpactEffects(EPhysicalSurface SurfaceType, FVector ImpactPoint);
 
