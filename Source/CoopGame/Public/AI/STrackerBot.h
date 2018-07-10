@@ -43,6 +43,8 @@ protected:
 
 	void DamageSelf();
 
+	void UpdatePath();
+
 	// VARIABLES
 	// Next point in navigation path
 	FVector NextPathPoint;
@@ -82,6 +84,12 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "TrackerBot")
 	float SelfDamageInterval;
+
+	FTimerHandle TimerHandle_Query;
+
+	/* How often to query for the best path to the player */
+	UPROPERTY(EditDefaultsOnly, Category = "TrackerBot")
+	float QueryInterval;
 
 public:	
 	// Called every frame

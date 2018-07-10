@@ -43,6 +43,8 @@ ASTrackerBot::ASTrackerBot()
 	ExplosionRadius = 200;
 
 	SelfDamageInterval = 0.25f;
+
+	QueryInterval = 1.0f;
 }
 
 // Called when the game starts or when spawned
@@ -52,8 +54,8 @@ void ASTrackerBot::BeginPlay()
 
 	if (Role == ROLE_Authority)
 	{
-		// Find initial move to
-		NextPathPoint = GetNextPathPoint();
+		GetWorldTimerManager().SetTimer(TimerHandle_Query, this, &ASTrackerBot::UpdatePath, QueryInterval, true, 0.0f);
+
 	}
 }
 
@@ -75,7 +77,10 @@ FVector ASTrackerBot::GetNextPathPoint()
 	return GetActorLocation();
 }
 
-
+void ASTrackerBot::UpdatePath()
+{
+	NextPathPoint = GetNextPathPoint();
+}
 
 void ASTrackerBot::HandleTakeDamage(USHealthComponent * OwningHealthComp, float Health, float HealthDelta, const UDamageType * DamageType, AController * InstigatedBy, AActor * DamageCauser)
 {
@@ -120,11 +125,13 @@ void ASTrackerBot::SelfDestruct()
 	{
 		TArray<AActor*> IgnoredActors;
 		IgnoredActors.Add(this);
-
 		// Apply Damage!
 		UGameplayStatics::ApplyRadialDamage(this, ExplosionDamage, GetActorLocation(), ExplosionRadius, nullptr, IgnoredActors, this, GetInstigatorController(), true);
 
 		DrawDebugSphere(GetWorld(), GetActorLocation(), ExplosionRadius, 12, FColor::Red, false, 2.0f, 0, 1.0f);
+
+		// Clear query timer
+		GetWorldTimerManager().ClearTimer(TimerHandle_Query);
 
 		// Delete actor
 		SetLifeSpan(2.0f);
@@ -147,9 +154,8 @@ void ASTrackerBot::Tick(float DeltaTime)
 
 		if (DistanceToTarget <= RequiredDistanceToTarget)
 		{
-			NextPathPoint = GetNextPathPoint();
+			UpdatePath();
 
-			DrawDebugString(GetWorld(), GetActorLocation(), "Target Reached!");
 		}
 		else
 		{
