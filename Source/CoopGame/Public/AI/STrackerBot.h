@@ -7,6 +7,7 @@
 #include "STrackerBot.generated.h"
 
 class USHealthComponent;
+class USphereComponent;
 
 UCLASS()
 class COOPGAME_API ASTrackerBot : public APawn
@@ -28,6 +29,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	USHealthComponent* HealthComp;
 
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	USphereComponent* SphereComp;
+
 	// FUNCTIONS
 	FVector GetNextPathPoint();
 
@@ -36,6 +40,8 @@ protected:
 	UFUNCTION()
 	void HandleTakeDamage(USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType,
 		class AController* InstigatedBy, AActor* DamageCauser);
+
+	void DamageSelf();
 
 	// VARIABLES
 	// Next point in navigation path
@@ -61,15 +67,26 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "TrackerBot")
 	float ExplosionDamage;
 
-	// Dynamic material toi pulse on damage
+	// Dynamic material to pulse on damage
 	UMaterialInstanceDynamic* MatInst;
+
+	FTimerHandle TimerHandle_SelfDamage;
+
+	bool bStartedSelfDestruction;
+
+	UPROPERTY(EditDefaultsOnly, Category = "TrackerBot")
+	USoundBase* SelfDestructSound;
+
+	UPROPERTY(EditDefaultsOnly, Category = "TrackerBot")
+	USoundBase* ExplodeSound;
+
+	UPROPERTY(EditDefaultsOnly, Category = "TrackerBot")
+	float SelfDamageInterval;
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 	
 };
