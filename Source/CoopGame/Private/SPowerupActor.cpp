@@ -46,6 +46,8 @@ void ASPowerupActor::ActivatePowerup()
 		OnTickPowerup();
 	}
 
+	OnActivated();
+
 
 }
 
